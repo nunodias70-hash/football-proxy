@@ -9,9 +9,12 @@ app.use((req, res, next) => {
 
 app.get('/api', async (req, res) => {
   const url = req.query.url;
+  const token = req.query.token;
   if (!url) return res.status(400).json({ error: 'Missing url' });
   try {
-    const response = await fetch(url);
+    const headers = {};
+    if (token) headers['X-Auth-Token'] = token;
+    const response = await fetch(url, { headers });
     const data = await response.json();
     res.json(data);
   } catch (e) {
